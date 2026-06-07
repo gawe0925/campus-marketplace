@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Campus Marketplace
 **COMP2750/6750 – Assessment Task 3**
 Group 37 | Macquarie University | Session 1, 2026
@@ -88,3 +89,7 @@ const firebaseConfig = {
 - Users cannot see their own listings in the Marketplace page.
 - Users cannot shortlist their own items.
 - All data is loaded dynamically from Firestore — no hardcoded items in the HTML.
+=======
+# campus-marketplace
+A campus second-hand marketplace web app. Browse, shortlist, and filter peer-to-peer listings with Firebase authentication and Firestore.
+>>>>>>> 7c67ccc10f7b55c2925cb5c89075992b88decce6
