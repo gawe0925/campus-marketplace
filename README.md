@@ -45,13 +45,13 @@
 I was responsible for the **Marketplace browsing page** (`marketplace.js` / `marketplace.html`):
 
 - Queried the `items` Firestore collection and filtered out the current user's own listings
-- 
+
 - Applied JavaScript `map()` to transform raw Firestore documents into dynamically rendered product cards
-- 
+
 - Built the **shortlist (heart) feature** — reads from the `shortlist` collection on load to restore saved state, then conditionally writes or deletes records based on whether the item is already shortlisted
-- 
+
 - Implemented **category filter** buttons that re-render the listing without additional database calls
-- 
+
 - Handled Firebase `onAuthStateChanged` to gate all page logic behind authentication
 
 ---
