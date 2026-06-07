@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Marketplace — Add New Listing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+ 
+<div class="container page-wrapper py-4">
+    <div class="card page-card welcome-card shadow mx-auto">
+        <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center">
+                    <img src="images/mq_marketplace_logo.png" alt="Campus Marketplace Logo" class="logo me-3">
+                    <div>
+                        <h1 class="h4 brand-title mb-0">Campus Marketplace</h1>
+                        <small class="text-muted">Add New Listing</small>
+                    </div>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm" onclick="window.location.href='mylistings.html'">← Back to My Listings</button>
+            </div>
+
+    <form id="listingForm">
+        <table>
+            <tr>
+                <th colspan="2">Item Details</th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label for="photoUpload">Upload Photos:</label>
+                    <input type="file" id="photoUpload" name="photoUpload" accept="image/*" multiple>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label for="productName">Product Name:</label></td>
+                <td><input type="text" id="productName" name="productName"></td>
+            </tr>
+            <tr>
+                <td><label for="description">Description:</label></td>
+                <td><textarea id="description" name="description"></textarea></td>
+            </tr>
+            <tr>
+                <td><label for="price">Price: (e.g. $500; if for trade, type "Trade")</label></td>
+                <td><input type="text" id="price" name="price"></td>
+            </tr>
+            <tr>
+                <td><label for="category">Category:</label></td>
+                <td>
+                    <select id="category" name="category">
+                        <option value="">Select a category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="books">Books</option>
+                        <option value="clothing">Clothing</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="condition">Condition:</label></td>
+                <td>
+                    <select id="condition" name="condition">
+                        <option value="">Select condition</option>
+                        <option value="new">New</option>
+                        <option value="like-new">Like New</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <th colspan="2">Pickup Location</th>
+            </tr>
+            <tr>
+                <td><label for="location">Preferred Location:</label></td>
+                <td>
+                    <select id="location" name="location">
+                        <option value="">Select a location</option>
+                        <option value="campus">Campus</option>
+                        <option value="library">Library</option>
+                        <option value="student-center">Student Center</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="pickupDate">Preferred Pickup Date:</label></td>
+                <td>
+                    <select id="pickupDate" name="pickupDate">
+                        <option value="">Select a date</option>
+                        <option value="weekdays">weekdays</option>
+                        <option value="weekends">weekends</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="Time">Preferred Pickup Time:</label></td>
+                <td>
+                    <select id="Time" name="Time">
+                        <option value="">Select a time</option>
+                        <option value="morning">08:00 - 12:00</option>
+                        <option value="afternoon">12:00 - 17:00</option>
+                        <option value="evening">17:00 - 21:00</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Submit Listing</button>
+                    <button type="button" class="cancel-btn" onclick="window.location.href='mylistings.html'">Cancel</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+
+    </div>
+</div>
+
+
+    <script type="module">
+    import { createItem, auth } from "./app.js";
+
+    // Cloudinary config
+    const cloudName = "dazxvby4t";
+    const uploadPreset = "COMP6750";
+    const folder = "image";
+
+    async function uploadToCloudinary(file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+        formData.append("folder", folder);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: "POST",
+            body: formData
+        });
+
+        if (!res.ok) throw new Error("Cloudinary upload failed");
+
+        const data = await res.json();
+        return data.secure_url;
+    }
+
+    const form = document.getElementById("listingForm");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Ensure user is logged in
+        if (!auth.currentUser) {
+            alert("You must be logged in to create a listing.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        // REQUIRED FIELD VALIDATION
+    
+        const productName = document.getElementById("productName").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const price = document.getElementById("price").value.trim();
+        const category = document.getElementById("category").value.trim();
+
+        let missing = [];
+
+        if (!productName) missing.push("Product Name");
+        if (!description) missing.push("Description");
+        if (!price) missing.push("Price");
+        if (!category) missing.push("Category");
+
+        if (missing.length > 0) {
+            alert("Please fill in the following required fields:\n\n" + missing.join("\n"));
+            return;
+        }
+
+        const photoInput = document.getElementById("photoUpload");
+        const files = photoInput.files;
+        const imageUrls = [];
+
+        // Upload each selected file to Cloudinary
+        for (let file of files) {
+            try {
+                const url = await uploadToCloudinary(file);
+                imageUrls.push(url);
+            } catch (error) {
+                alert(`Failed to upload ${file.name}. Try again.`);
+                return;
+            }
+        }
+
+        const data = {
+            productName: document.getElementById("productName").value,
+            description: document.getElementById("description").value,
+            price: document.getElementById("price").value,
+            category: document.getElementById("category").value,
+            condition: document.getElementById("condition").value,
+            location: document.getElementById("location").value,
+            pickupDate: document.getElementById("pickupDate").value,
+            pickupTime: document.getElementById("Time").value,
+            userId: auth.currentUser.uid,
+            userEmail: auth.currentUser.email,
+        };
+
+        await createItem(data, imageUrls);
+
+        alert("Listing created successfully");
+        window.location.href = "mylistings.html";
+    });
+</script>
+
+
+</body>
+</html>

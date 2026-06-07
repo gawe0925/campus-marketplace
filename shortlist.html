@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Shortlist - Campus Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .shortlist-page {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            min-height: 100vh;
+        }
+
+        .shortlist-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        .app-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #7b1e3a;
+        }
+
+        .header-center {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            color: #7b1e3a;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .user-info {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .shortlist-item {
+            display: flex;
+            gap: 20px;
+            padding: 18px;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .shortlist-item img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h4 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        .item-details p {
+            margin: 6px 0;
+        }
+
+        .item-category {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+
+        .item-price.trade {
+            color: #e74c3c;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .remove-btn:hover {
+            background-color: #b02a37;
+        }
+
+        .remove-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #bdc3c7;
+        }
+
+        .empty-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .firebase-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .shortlist-item {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+
+            .shortlist-item img {
+                width: 200px;
+                height: 200px;
+            }
+
+            .item-details {
+                width: 100%;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .action-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .action-buttons button,
+            .action-buttons a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="shortlist-page">
+
+    <div class="shortlist-container">
+        <!-- Header -->
+        <div class="header-left">
+            <img src="images/mq_marketplace_logo.png" alt="Campus Marketplace Logo" class="logo">
+            <span class="app-name">Campus Marketplace</span>
+        </div>
+
+        <div class="header-center">
+            <h1 class="page-title">My Shortlist</h1>
+        </div>
+
+        <!-- ✅ 修正：動態顯示登入 email，不再寫死 -->
+        <div>Signed in as: <span id="userEmail">Loading...</span></div>
+
+        <!-- User Info & Actions -->
+        <div class="header-actions">
+            <div class="user-info"></div>
+            <div class="action-buttons">
+                <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='index.html'">Back to Home</button>
+                <button class="btn btn-outline-danger" id="signOutButton">Sign Out</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ✅ 修正：補上缺少的關閉標籤 -->
+        <div id="firebaseNotice" class="firebase-notice" style="display: none;">
+            ⚠️ Failed to load shortlist data. Please check your connection and try again.
+        </div>
+
+        <!-- Shortlist Items Container -->
+        <div id="shortlistContainer"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📋</div>
+            <div class="empty-message">Your shortlist is empty</div>
+            <p>Start adding items from the Marketplace to your shortlist!</p>
+            <a href="marketplace.html" class="btn btn-primary">Browse Marketplace</a>
+        </div>
+    </div>
+    <script type="module" src="shortlist.js"></script>
+    <!-- <script type="module">
+        // ✅ 修正：改從 app.js import，因為 getShortlistedItems / removeFromShortlist 定義在那裡
+        import { auth, getShortlistedItems, removeFromShortlist } from "./app.js";
+        import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+        const container = document.getElementById("shortlistContainer");
+        const emptyState = document.getElementById("emptyState");
+        const firebaseNotice = document.getElementById("firebaseNotice");
+        const userEmailEl = document.getElementById("userEmail");
+
+        // Sign Out Button
+        document.getElementById("signOutButton").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Sign out error:", error);
+            });
+        });
+
+        // Check Authentication Status
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // ✅ 修正：動態填入登入 email
+            userEmailEl.textContent = user.email;
+
+            try {
+                // ✅ 修正：直接用 import 進來的函數，不再動態 import
+                const items = await getShortlistedItems();
+
+                if (items.length === 0) {
+                    container.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                container.innerHTML = '';
+
+                items.forEach(item => {
+                    const firstImage = item.imageUrls?.[0] || "placeholder.jpg";
+                    const priceDisplay = item.price === 'Trade' ? item.price : `$${item.price}`;
+
+                    const div = document.createElement("div");
+                    div.className = "shortlist-item";
+                    div.innerHTML = `
+                        <img src="${firstImage}" alt="${item.productName}">
+                        <div class="item-details">
+                            <div class="item-category">${item.category || 'Uncategorized'}</div>
+                            <h4>${item.productName}</h4>
+                            <p><strong>Description:</strong> ${item.description}</p>
+                            <p><strong>Condition:</strong> ${item.condition}</p>
+                            <p><strong>Seller:</strong> ${item.sellerEmail}</p>
+                            <p class="item-price ${item.price === 'Trade' ? 'trade' : ''}">${priceDisplay}</p>
+                            <button class="remove-btn">Remove from Shortlist</button>
+                        </div>
+                    `;
+
+                    // ✅ 修正：用 addEventListener 綁定，避免 inline onclick 的 scope 問題
+                    const removeBtn = div.querySelector(".remove-btn");
+                    removeBtn.addEventListener("click", async () => {
+                        if (!confirm("Are you sure you want to remove this item from your shortlist?")) return;
+
+                        try {
+                            removeBtn.disabled = true;
+                            removeBtn.textContent = 'Removing...';
+
+                            await removeFromShortlist(item.shortlistId);
+
+                            // 移除成功後直接從 DOM 移除，不需要整頁 reload
+                            div.remove();
+
+                            // 如果全部移除完就顯示 empty state
+                            if (container.children.length === 0) {
+                                emptyState.style.display = 'block';
+                            }
+                        } catch (error) {
+                            console.error("Error removing from shortlist:", error);
+                            removeBtn.disabled = false;
+                            removeBtn.textContent = 'Remove from Shortlist';
+                            alert("Failed to remove item. Please try again.");
+                        }
+                    });
+
+                    container.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error("Error loading shortlist:", error);
+                firebaseNotice.style.display = 'block';
+                container.innerHTML = '';
+            }
+        });
+    </script> -->
+
+</body>
+</html>
