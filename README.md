@@ -59,12 +59,12 @@ I was responsible for the **Marketplace browsing page** (`marketplace.js` / `mar
 ## 🚀 How to Run
 
 1. Clone the repo and open the project folder in VS Code
-2. 
-3. Install the **Live Server** extension if not already installed
-4. 
-5. Right-click `login.html` → **Open with Live Server**
-6. 
-7. Sign in with one of the test accounts below
+
+2. Install the **Live Server** extension if not already installed
+
+3. Right-click `login.html` → **Open with Live Server**
+
+4. Sign in with one of the test accounts below
 
 > ⚠️ Do not open HTML files directly in the browser — Firebase requires a server origin to avoid CORS issues.
 
