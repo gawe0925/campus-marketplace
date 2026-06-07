@@ -15,13 +15,9 @@
 | Feature | Description |
 |---|---|
 | 🔐 Authentication | Firebase Auth — sign in required to browse or list items |
-
 | 🛒 Marketplace | Browse all listings except your own, with category filtering |
-
 | ❤️ Shortlist | Save and unsave items across sessions, persisted in Firestore |
-
 | 📦 My Listings | View and manage items you have listed |
-
 | ➕ Create Listing | Upload items with images, price, condition, and pickup details |
 
 ---
@@ -31,11 +27,8 @@
 | Category | Technology |
 |---|---|
 | Frontend | HTML, CSS, Bootstrap, JavaScript |
-
 | Backend / Database | Firebase Firestore |
-
 | Authentication | Firebase Authentication |
-
 | Deployment | Live Server (local) |
 
 ---
@@ -75,9 +68,7 @@ I was responsible for the **Marketplace browsing page** (`marketplace.js` / `mar
 | Email | Password |
 |---|---|
 | student_seller@students.mq.edu.au | Iwanttosellstuff |
-
 | test@gmail.com | test123 |
-
 | test1@gmail.com | test1234 |
 
 ---
@@ -87,11 +78,8 @@ I was responsible for the **Marketplace browsing page** (`marketplace.js` / `mar
 | Name |
 |---|
 | Evan Walsh |
-
 | Alan Chow |
-
 | Angella Mutoni |
-
 | Mark Cheng |
 
 ---
